@@ -165,7 +165,8 @@ io.on('connection', (socket) => {
   })
 
   socket.on('get Deals', (data) => {
-    const query = { status: "paid"};
+    const {start, end} = data;
+    const query = { status: "paid", date: { $gte: new Date(start).toISOString(), $lte: new Date(end).toISOString()}};
     Order.find(query, function(err,result){
       if(!err){
         socket.emit("get Deals", result);
@@ -177,14 +178,14 @@ io.on('connection', (socket) => {
 
   socket.on('pay', (data) => {
     const newStatus = 'paid';
-    const newDate = new Date();
+    const newDate = new Date().toISOString();
     const newVal = {
       date: newDate,
       status: newStatus
     };
-    Order.updateMany({table: data}, newVal, function(err){
+    Order.updateMany({table: data, date: ''}, newVal, function(err){
       if(!err){
-          console.log(data +": Successfully paid orders!");
+        console.log(data +": Successfully paid orders!");
         socket.emit("pay", "ok");
       }else{
         console.log(data +": Error in paying orders!");
