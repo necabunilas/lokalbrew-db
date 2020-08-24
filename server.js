@@ -46,8 +46,10 @@ app.get("/", function(req,res){
 })
 
 //localost listener
-const server = app.listen(process.env.PORT || port, function(){
-  console.log(`App listening at http://localhost:` + port)
+const ip = "192.168.254.107";
+
+const server = app.listen(process.env.PORT || port, ip, function(){
+  console.log(`App listening at http://` + ip + ':' + port)
 });
 
 //websocket variable
@@ -195,3 +197,4 @@ io.on('connection', (socket) => {
   })
 
 });
+
