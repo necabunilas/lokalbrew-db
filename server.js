@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 const ejs = require('ejs');
 const socket = require("socket.io");
-const bcrypt = require("bcryptjs");
 const saltRounds = 10;
 
 const app = express();
@@ -27,7 +26,7 @@ app.use((req, res, next) => {
 });
 
 //connect to db
-mongoose.connect('mongodb://127.0.0.1:27017/lokalbrew', { useUnifiedTopology: true,  useNewUrlParser: true  });
+mongoose.connect(process.env.DB_HOST, { useUnifiedTopology: true,  useNewUrlParser: true  });
 
 //user schema
 const orderSchema = new mongoose.Schema({
@@ -48,8 +47,9 @@ app.get("/", function(req,res){
 //localost listener
 const ip = "192.168.254.107";
 
-const server = app.listen(process.env.PORT || port, ip, function(){
-  console.log(`App listening at http://` + ip + ':' + port)
+//localost listener
+const server = app.listen(process.env.PORT || port, function(){
+  console.log(`App listening at http://localhost:` + port)
 });
 
 //websocket variable
@@ -197,4 +197,3 @@ io.on('connection', (socket) => {
   })
 
 });
-
